@@ -2,7 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
-import LaunchItem from './LaunchItem';
+import LaunchItem from "./LaunchItem";
 
 const LAUNCHES_QUERY = gql`
   query LaunchesQuery {
@@ -25,12 +25,9 @@ const Launches = (props) => {
           if (loading) return <h4>Loading....</h4>;
           if (error) console.log(error);
 
-          console.log(data.launches);
-          
-          const allLaunches = data.launches.map(launch=>{
-              return <LaunchItem {...launch} />
-          })
-          return [...allLaunches];
+          return data.launches.map((launch) => {
+            return <LaunchItem key={launch.flight_number} {...launch} />;
+          });
         }}
       </Query>
     </div>
