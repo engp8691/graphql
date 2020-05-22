@@ -2,13 +2,27 @@ import React from "react";
 import classNames from "classnames";
 import Moment from 'react-moment';
 
+import LaunchDetails from './LaunchDetails'
+
 const LaunchItem = (props) => {
+  const [show, setShow] = React.useState(false);
+  const [flight_number, setFlightNumber] = React.useState(-1);
+
   const openDetails = (flight_number) => {
+    setShow(true);
+    setFlightNumber(flight_number);
     console.log(flight_number);
   };
 
+  const setHide = (e)=>{
+    setShow(false);
+    setFlightNumber(-1);
+  }
+
   return (
     <div className="card card-body mb-3">
+      <LaunchDetails show={show} flight_number={flight_number} setHide={setHide} />
+
       <div className="row">
         <div className="col-md-9">
           <h4>
