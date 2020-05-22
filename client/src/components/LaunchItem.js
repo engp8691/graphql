@@ -1,11 +1,12 @@
 import React from "react";
 import classNames from "classnames";
+import Moment from 'react-moment';
 
 const LaunchItem = (props) => {
   const openDetails = (flight_number) => {
     console.log(flight_number);
   };
-  
+
   return (
     <div className="card card-body mb-3">
       <div className="row">
@@ -21,7 +22,7 @@ const LaunchItem = (props) => {
               {props.mission_name}
             </span>{" "}
           </h4>
-          <p>Date: {props.launch_date_local} </p>
+          <p>Date: <Moment format="YYYY-MMM-DD HH:mm">{props.launch_date_local}</Moment>  </p>
         </div>
         <div className="col-md-3">
           <button
