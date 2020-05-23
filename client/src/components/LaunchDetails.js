@@ -2,8 +2,11 @@ import React from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
+import Moment from "react-moment";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
 
 //////////
 const LAUNCH_QUERY = gql`
@@ -24,56 +27,94 @@ const LAUNCH_QUERY = gql`
 `;
 /////////
 
-const LaunchDetails = (props) => {
-  const [show, setShow] = React.useState(false);
-  const [flight_number, setFlightNumber] = React.useState(-1);
+const ModalDialog = (props) => {
+  return (
+    <Modal show={true} animation={false} onHide={props.handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Launch Details</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{props.bodyContent}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 
+const LaunchDetails = ({ show, flight_number, handleClose }) => {
   React.useEffect(() => {
-    setShow(props.show);
-    setFlightNumber(props.flight_number);
-  }, [props.show]);
-
-  const handleClose = () => {
-    props.setHide();
-    setShow(false);
-  };
-
-  console.log(show, props);
+    return (e) => {
+      console.log("THis is the clean callback");
+    };
+  }, []);
 
   return show ? (
-    <>
-    <div>Hello</div>
+    <Query query={LAUNCH_QUERY} variables={{ flight_number }}>
+      {({ loading, error, data }) => {
+        let bodyContent = null;
 
-      {/* <Query query={LAUNCH_QUERY} variables={{ flight_number }}>
-        {({ loading, error, data }) => {
-          // if (loading) return <h4>Loading....</h4>;
-          if (loading) console.log("Loading...");
-          if (error) console.log(error);
-          console.log(data);
-        }}
-      </Query> */}
+        if (loading) {
+          bodyContent = <span>Loading ...</span>;
+          return (
+            <ModalDialog bodyContent={bodyContent} handleClose={handleClose} />
+          );
+        } else if (error) {
+          bodyContent = <span>Error Happened ...</span>;
+          return (
+            <ModalDialog bodyContent={bodyContent} handleClose={handleClose} />
+          );
+        } else {
+          console.log(data, data.launch.rocket);
 
-      {/* <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
-    </>
+          bodyContent = (
+            <Table striped bordered hover size="sm">
+              <tbody>
+                <tr>
+                  <td>Mission Name</td>
+                  <td>{data.launch.mission_name}</td>
+                </tr>
+
+                <tr>
+                  <td>Launch Date</td>
+                  <td>
+                    <Moment format="YYYY-MMM-DD HH:mm">
+                      {data.launch.launch_date_local}
+                    </Moment>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Result</td>
+                  <td>
+                    {data.launch.launch_success ? "Successful" : "Failed"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Rocket Name</td>
+                  <td>{data.launch.rocket.rocket_name}</td>
+                </tr>
+
+                <tr>
+                  <td>Rocket Type</td>
+                  <td>{data.launch.rocket.rocket_type}</td>
+                </tr>
+              </tbody>
+            </Table>
+          );
+
+          return (
+            <ModalDialog bodyContent={bodyContent} handleClose={handleClose} />
+          );
+        }
+      }}
+    </Query>
   ) : null;
 };
 
 export default LaunchDetails;
-
-
 
 // {
 //     launch(flight_number: 2) {

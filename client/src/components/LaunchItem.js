@@ -1,8 +1,8 @@
 import React from "react";
 import classNames from "classnames";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
-import LaunchDetails from './LaunchDetails'
+import LaunchDetails from "./LaunchDetails";
 
 const LaunchItem = (props) => {
   const [show, setShow] = React.useState(false);
@@ -11,17 +11,18 @@ const LaunchItem = (props) => {
   const openDetails = (flight_number) => {
     setShow(true);
     setFlightNumber(flight_number);
-    console.log(flight_number);
   };
 
-  const setHide = (e)=>{
+  const handleClose = (e)=>{
     setShow(false);
     setFlightNumber(-1);
   }
 
   return (
     <div className="card card-body mb-3">
-      <LaunchDetails show={show} flight_number={flight_number} setHide={setHide} />
+      {show && flight_number > 0 ? (
+        <LaunchDetails show={show} flight_number={flight_number} handleClose={handleClose} />
+      ) : null}
 
       <div className="row">
         <div className="col-md-9">
@@ -36,7 +37,12 @@ const LaunchItem = (props) => {
               {props.mission_name}
             </span>{" "}
           </h4>
-          <p>Date: <Moment format="YYYY-MMM-DD HH:mm">{props.launch_date_local}</Moment>  </p>
+          <p>
+            Date:{" "}
+            <Moment format="YYYY-MMM-DD HH:mm">
+              {props.launch_date_local}
+            </Moment>{" "}
+          </p>
         </div>
         <div className="col-md-3">
           <button
