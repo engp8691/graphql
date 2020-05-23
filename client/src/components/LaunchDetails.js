@@ -1,12 +1,14 @@
 import React from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-
+import classNames from "classnames";
 import Moment from "react-moment";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+
+import styles from "./LaunchDetails.module.css";
 
 //////////
 const LAUNCH_QUERY = gql`
@@ -26,10 +28,37 @@ const LAUNCH_QUERY = gql`
   }
 `;
 /////////
+const MyForm = (props) => {
+  return (
+    <div style={{ width: "640px", height: "480px", backgroundColor: "red" }}>
+      <p style={{ color: "#ffffff" }}>Hello World</p>
+    </div>
+  );
+};
+
+const ModalWithOwnComponent = (props) => {
+  return (
+    <Modal
+      dialogClassName={styles.customDialog}
+      show={true}
+      animation={false}
+      centered={true}
+      onHide={props.handleClose}
+    >
+      <MyForm />
+    </Modal>
+  );
+};
 
 const ModalDialog = (props) => {
   return (
-    <Modal show={true} animation={false} onHide={props.handleClose}>
+    <Modal
+      // dialogClassName={styles.customDialog}
+      show={true}
+      animation={false}
+      centered={true}
+      onHide={props.handleClose}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Launch Details</Modal.Title>
       </Modal.Header>
@@ -87,7 +116,12 @@ const LaunchDetails = ({ show, flight_number, handleClose }) => {
 
                 <tr>
                   <td>Result</td>
-                  <td>
+                  <td
+                    className={classNames({
+                      "text-success": data.launch.launch_success,
+                      "text-danger": !data.launch.launch_success,
+                    })}
+                  >
                     {data.launch.launch_success ? "Successful" : "Failed"}
                   </td>
                 </tr>
