@@ -49,7 +49,7 @@ const LaunchItem = (props) => {
             className={`btn btn-secondary`}
             onClick={(e) => openDetails(props.flight_number)}
           >
-            Deatils
+            Details
           </button>
         </div>
       </div>

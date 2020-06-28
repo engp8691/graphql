@@ -43,6 +43,7 @@ const ModalWithOwnComponent = (props) => {
       show={true}
       animation={false}
       centered={true}
+      backdrop={'static'}
       onHide={props.handleClose}
     >
       <MyForm />
@@ -57,6 +58,7 @@ const ModalDialog = (props) => {
       show={true}
       animation={false}
       centered={true}
+      backdrop={false}
       onHide={props.handleClose}
     >
       <Modal.Header closeButton>
